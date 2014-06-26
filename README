@@ -1,0 +1,106 @@
+-------------------- Sagem MorphoSmart Optique for Linux------------------------
+
+1. Directory description
+------------------------------
+
+---MSOlinuxDistrib-X.Y/           Root directory 
+        |--libMSOComm_src/        USB and RS232 driver sources
+              |--RS232/
+              |--USB/
+        |--libMSO_src/            MSO Library sources
+        |--lib/                   libMSO and libMSOComm libraries
+        |--include/               Include interface
+        |--samples/               Sample sources 
+              |--bin/             Sample executables
+              |--UseInstalledLib/ Sample that shows how to link with installed libraries
+        |--doc/                   Doxygen Documentation
+        |--hotplug_conf/          Hotplugging config files 
+              |--hotplug/         Config files for hotplug
+              |--udev/            Config files for udev
+              |--Example/         Example Config file for udev
+
+
+2. Compilation of librairies and sample programs
+----------------------------------------------------
+
+In order to compile sample programs, verify that you have following package installed on your sytem
+- libusb            : Main library for Usb bus access in user mode
+- libusb-devel      : Include file to compile and link with libusb
+- libSDL            : library for displaying image in sample programs
+- libSDL-devel      : Include file for libSDL
+- libSDL_ttf        : library for writing text string into SDL window
+- libSDL_ttf-devel  : Include file for libSDL_ttf
+
+Once all these libraries are installed, just type:
+    make
+
+This command compiles Sagem librairies in lib/ and sample programs in samples/bin directory
+
+Another sample is provided in order to show how to link with installed library:
+samples/Sample_aferInstall
+After installation, type make in this directory. 
+This will compile sample program and link with /usr/local/lib/libMSO/libMSO and 
+/usr/local/lib/libMSO/libMSOComm. Change prefix in Makefile if needed.
+
+
+3. Intallation procedure
+-----------------------------
+
+Edit Makefile and modify if needed the following fields:
+PREFIX = /usr/local	(Default)
+	Installation prefix: 'lib' will be installed in /usr/local/lib/libMSO
+			     'include' will be installed in /usr/local/include/libMSO
+
+HOTPLUG=none or HOTPLUG_MODE = hotplug or HOTPLUG_MODE = udev
+	installation mode for hot pluggable device detection:
+		none: Installs nothing	(Default)
+		udev: For recent kernel (>= 2.6.12). Check that you have udev installed 
+	              and /etc/udev directory
+		hotplug: For older kernel (2.4.X and 2.6.X). Check that you have hotplug installed and 
+	 	         /etc/hotplug directory
+
+If you choose HOTPLUG=none, you will have access to your device only in root.
+If you install hotplug or udev script, kernel will automatically change rights on 
+device (/proc/bus/usb/BBB/DDD) when a MorphoSmart is plugged on USB bus. You will have 
+access to the device in user mode.
+You can get bus number and device number with lsusb command (package usbutils needed) and check that you have
+the correct rights on the device file /proc/bus/usb/BBB/DDD.
+
+Udev lets you specify the node name and access rights for your device. An example is provided
+in hotplug_conf/Example directory (tested with Fedora core 5)
+
+
+For serial connection, you need to have read/write right access on serial device file (ex: /dev/ttyS0)
+You can change the rights, in 'root', with 
+    chmod 666 /dev/ttyS0
+
+Type :
+    make 
+This command compiles libraries and sample executables
+
+and type as root:
+    make install. 
+
+This command installs libraries, include files and hotplug or udev files if specified with HOTPLUG field. 
+Lib path to Sagem library is added to /etc/ld.so.config, and /sbin/ldconfig is executed.
+
+
+4. Troubleshooting
+------------------------
+
+On some systems, acm module (kernel 2.4.X) or cdc_acm module (kernel 2.6.X) is loaded when a sagem device 
+is inserted. It can be necessary to unload this module with: 
+    rmmod acm 
+or:
+    rmmod cdc_acm 
+
+To ensure this module doesn't interfere with the libraries, you can add the following command
+in modules.conf (kernel 2.4.X) or in modprobe.conf (kernel 2.6.X):
+
+    alias acm off
+or
+    alias cdc_acm off
+
+This will force acm module to stay unloaded.
+
+
