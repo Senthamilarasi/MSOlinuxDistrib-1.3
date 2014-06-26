@@ -1,0 +1,6 @@
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0047", SYMLINK="CBM_%k", MODE="0666"
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0023", SYMLINK="MSO100_%k", MODE="0666"
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0024", SYMLINK="MSO300_%k", MODE="0666"
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0025", SYMLINK="MSOTEST_%k", MODE="0666"
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0026", SYMLINK="MSO350_%k", MODE="0666"
+ACTION=="add", SUBSYSTEM=="usb_device", SYSFS{idVendor}=="079b", SYSFS{idProduct}=="0052", SYMLINK="MSO1310_%k", MODE="0666"

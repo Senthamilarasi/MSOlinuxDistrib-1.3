@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+then
+    CONSOLEOWNER=""
+    for conlock in \
+        /var/run/console.lock \
+        /var/run/console/console.lock \
+        /var/lock/console.lock
+    do
+        if [ -f "$conlock" ]; then
+	    CONSOLEOWNER=`cat $conlock`
+        fi
+    done
+    if [ -n "$CONSOLEOWNER" ]
+    then
+        chmod 0000 "${DEVICE}"
+        chown "$CONSOLEOWNER" "${DEVICE}"
+        chmod 0600 "${DEVICE}"
+    fi
+fi
